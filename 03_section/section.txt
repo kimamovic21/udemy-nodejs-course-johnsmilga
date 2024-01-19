@@ -1,0 +1,198 @@
+Section 3: Node Tutorial
+
+09. REPL
+
+10. CLI
+
+11. Source Code
+
+12. Globals
+-kreiramo app.js fajl
+-u terminalu pokrecemo app.js fajl sa komandom node app.js
+
+13. Modules Setup
+-kreiramo funkciju sayHi sa parametrom name
+-kreiramo dvije const varijable 
+-pozivamo funkcije
+
+14. First Module
+-kreiramo varijablu const secret 
+-CommonJS - svaki fajl je module (default)
+-Modulues - enkapsulirani kod
+-kreiramo names.js fajl
+-kreiramo utils.js fajl
+-u fajl names.js dodajemo console.log(module);
+-u terminal ukucamo komandu node names.js
+-u names.js fajl dodajemo module.exports = { john, kerim }
+-u app14.js fajl dodajemo funkciju require('')
+-kreiramo varijablu const names
+-u utils.js fajl dodajemo module.exports = sayHi
+-u app14.js fajlu kreiramo varijablu const sayHi
+
+15. Alternative Syntax
+-kreiramo alternative.js fajl
+-u alternative.js fajl dodajemo module.exports.items
+-kreiramo varijablu const data 
+
+16. Mind Grenade
+-kreiramo mind-grenade.js fajl
+-u mind-grenade.js fajlu kreiramo varijable num1, num2 i funkciju addValues()
+
+17. Built-in Modules Intro
+
+18. OS - Module
+-kreiramo modules.js fajl
+-u app18.js fajlu kreiramo varijablu const os = require('os')
+-kreiramo varijablu const user
+-kreiramo varijablu objekt const currentOS
+
+19. PATH - Module
+-kreiramo os-module.js fajl
+-u app19.js fajlu kreiramo varijablu const path = require('path')
+-kreiramo folder content
+-u folderu content kreiramo folder subfolder
+-u folderu subfolder kreiramo test.txt fajl
+-kreiramo varijablu const filePath 
+-u app19.js fajlu kreiramo varijablu const base
+-kreiramo varijablu const absolute 
+
+20. FS - Module (sync)
+-u app20.js fajlu kreiramo funkciju require('fs')
+-vrijednost funkcije require('fs') pohranjujemo u varijable const { readFileSync, writeFileSync }
+-kreiramo varijablu const first
+-kreiramo funkciju writeFileSync(...) sa dva argumenta
+
+21. FS Module (async)
+-kreiramo funkciju require('fs')
+-vrijednost funkcije require('fs') pohranjujemo u varijable const { readFile, writeFile }
+-dodajemo funkciju readFile() sa tri argumenta
+
+22. Sync vs Async
+
+23. HTTP Intro
+
+24. HTTP - Module (setup)
+-u app24.js fajlu kreiramo varijablu const http = require('http')
+-kreiramo funkciju http.createServer()
+-u funkciji createServer() kreiramo callback funkciju
+-callback funkciji dodajemo parametre req i res
+-vrijednost funkcije http.createServer() pohranjujemo u varijablu const server
+-varijabli server dodajemo funkciju .listen() sa argumentom 5000
+-u callback funkciju dodajemo parametru res funkciju write i end
+-otvorimo u pretrazivacu http://localhost:5000/
+
+25. HTTP - Module (more features)
+-u callback funkciju dodajemo uslov if (req.url === '/')
+-dodajemo uslov if (req.url === '/about')
+-dodajemo parametru res funkciju .end()
+
+26. NPM Info
+-otvorimo web stranicu https://www.npmjs.com/
+
+27. NPM Command
+-u terminal ukucamo komandu npm --v da provjerimo verziju NodeJS-a (8.12.1)
+
+28. First Packages and package.json
+-u terminal ukucamo komandu npm init
+-kreiramo package.json fajl
+-u terminal ukucamo komandu npm i lodash
+-kreira se folder node_modules
+-u app28.js fajlu kreiramo varijablu const _ = require('lodash')
+-kreiramo varijablu niz const items
+-kreiramo varijablu const newItems = _.flattenDeep(items)
+
+29. Share Code on Github
+-kreiramo .gitignore fajla
+-u .gitignore fajl dodajemo /node_modules
+-kreiranje Github profila
+-u terminal ukucamo komandu git init
+-git add .
+-git commit -m "first commit"
+-kada kloniramo repozitorij, instaliramo node_modules sa komandom npm i
+
+30. Nodemon
+-otvorimo web stranicu https://www.npmjs.com/package/nodemon
+-u terminalu instaliramo Nodemon paket
+-u terminal ukucamo komandu npm i nodemon
+-u package.json fajl dodajemo komandu "starts" u "scripts"
+-dodajemo komandu "dev"
+-u terminal ukucamo komandu npm run dev app.js
+
+31. Uninstall Package
+-u terminal ukucamo komandu npm uninstall (packageName)
+
+32. Global Install
+-instaliramo paket nodemon globalno
+
+33. package-lock.json
+
+34. Important Topics - Intro
+
+35. Event Loop - Info
+
+36. Event Loops - Slides
+-otvorimo web stranicu https://course-api.com/
+
+37. Event Loop - Code Examples
+
+38. Async Patterns - Blocking Code
+-kreiramo varijablu const http
+-kreiramo varijablu const server
+-varijabli server dodajemo funkciju .listen()
+-u funkciju createServer() dodajemo callback funkciju
+-callback funkciji dodajemo parametre req i res
+-u callback funkciju dodajemo uslov if
+
+39. Async Patterns - Setup Promises
+-kreiramo varijablu const { readFile }
+-kreiramo funkciju readFile
+-u funkciju readFile dodajemo uslove if - else
+-kreiramo varijablu const getText
+-kreiramo new Promise
+-u new Promise dodajemo funkciju readFile()
+-funkciji getText() dodajemo funkciju .then() i .catch()
+
+40. Async Patterns - Refactor to Async
+-kreiramo asinhronu funkciju start()
+-u funkciji start() kreiramo varijablu const first
+-u funkciju start() dodajemo try - catch blokove koda
+
+41. Async Patterns - Node's Native Option
+-kreiramo varijablu const util 
+-kreiramo varijablu const readFilePromise
+-kreiramo varijablu const writeFilePromise
+-importujemo funkciju writeFile
+-u try blok koda dodajemo await readFilePromise(...)
+-u try blok koda dodajemo await writeFilePromise(...)
+
+42. Events Info
+
+43. Events Emitter - Code Example
+-kreiramo varijablu const EventEmitter = require('events')
+-kreiramo varijablu const customEmitter = new EventEmitter()
+-varijabli customEmitter dodajemo funkciju .on()
+-u funkciju on() dodajemo dva parametra
+-prvi argument je string, a drugi parametar callback funkcija
+-varijabli customEmitter dodajemo funkciju .omit()
+
+44. Events Emitter - Additional Info
+-dodajemo jos jedan customEmitter.on()
+
+45. Events Emitter - HTTP Module Example
+
+46. Streams Info
+-Writeable, Readable, Duplex, Transform
+
+47. Streams - Read File
+-kreiramo varijablu const { createReadStream } = require('fs')
+-kreiramo funkciju createReadStream()
+-vrijednost funkcije createReadStream() pohranjujemo u varijablu const stream
+-varijabli stream dodajemo funkciju .on()
+
+48. Streams - Additional Info
+-kreiramo funkciju createReadStream()
+-vrijednost funkcije createReadStream() pohranjujemo u varijablu const stream
+
+49. Streams - HTTP Info
+
+50. End of Module

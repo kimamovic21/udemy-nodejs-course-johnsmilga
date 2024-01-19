@@ -1,0 +1,7 @@
+Section 2: Install
+
+07. Browser vs Server
+
+08. Install Node.js
+-otvorimo web stranicu https://nodejs.org/en
+-instaliramo Node JS

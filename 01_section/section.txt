@@ -1,0 +1,13 @@
+Section 1: Introduction
+
+01. What is Node.js
+
+02. Course Requirements
+
+03. Course Structure
+
+04. Text Editor
+
+05. Video Blur Fix
+
+06. Course Review
