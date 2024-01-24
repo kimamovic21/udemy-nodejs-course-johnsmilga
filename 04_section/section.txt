@@ -1,0 +1,240 @@
+Section 4: Express Tutorial
+
+51. HTTP Request/Response Cycle
+
+52. HTTP Messages
+-status code
+
+53. Starter Project Info
+-preuzmemo pocetne fajlove
+
+54. Starter Project Install
+-u terminal ukucamo komandu npm init
+-u terminalu instaliramo paket nodemon
+-instaliramo projekt u terminalu
+
+55. Starter Overview
+
+56. HTTP - Basic
+-u app.js fajlu kreiramo varijablu const http
+-kreiramo funkciju createServer()
+-vrijednost funkcije createServer() pohranjujemo u varijablu const server
+-u funkciju createServer() dodajemo callback funkciju sa dva parametra req i res
+-varijabli server dodajemo funkciju .listen(5000)
+-u callback funkciju dodajemo res.end('Home page')
+
+57. HTTP - Headers
+-otvorimo web stranicu https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+-u callback funkciju dodajemo res.writeHead(200, {...})
+-dodajemo res.write('...')
+
+58. HTTP - Request Object
+-u callback funkciju dodajemo uslove if, else if i else
+-kreiramo varijablu const url = req.url
+
+59. HTTP - HTML File
+-kreiramo index.html fajl
+-u app.js fajl importujemo funkciju readFileSync
+-kreiramo varijablu const homePage
+-res.write() proslijedujemo varijablu homePage
+
+60. HTTP - App Example
+-kreiramo tri varijablu homeStyles, homeImage, homeLogic
+-dodajemo uslov else if za pojavljivanje css-a
+-dodajemo uslov else if za pojavljivanje slike 
+-dodajemo uslov else if za javascript logiku iz browser-app.js fajla
+
+61. Express Info
+-otvorimo web stranicu https://expressjs.com/
+-u terminalu instaliramo paket expressjs
+-u terminal ukucamo komandu npm i express
+
+62. Express Basics
+-kreiramo varijablu const express = require('express')
+-kreiramo funkciju express()
+-vrijednost funkcije express() pohranjujemo u varijablu const app
+-varijabli app dodajemo funkciju .listen()
+-u funkciju listen() dodajemo dva argumenta
+-prvi argument je broj porta, a drugi argument je callback funkcija
+-varijabli app dodajemo funkciju .get()
+-u funkciju .get() dodajemo dva argumenta
+-prvi argument je ruta, a drugi argumet je callback funkcija
+-callback funkciji dodajemo dva parametra req i res
+-u callback funkciju dodajemo parametru res funkciju send()
+-kreiramo jos jednu metodu get()
+-u app.get() dodajemo res.status(200).send(...)
+-dodajemo metodu app.all()
+-u app.all() dodajemo res.status(404).send(...)
+
+63. Express - App Example
+-kreiramo varijable const express i const app
+-varijabli app dodajemo metode .get(), all() i listen()
+-u app.all() metodu dodajemo res.status(404).send('Resource not found')
+-kreiramo varijablu const path = require('path')
+-u app.get() metodu dodajemo res.sendFile()
+-u funkciju sendFile() dodajemo funkciju path.resolve()
+-kreiramo folder public
+-u folder public kopiramo fajlove iz foldera navbar-app 
+-u app.js fajl dodajemo metodu app.use(express.static('./public'))
+
+64. Express - All Static
+-brisemo app.get() metodu
+
+65. API vs SSR
+
+66. JSON - Basic
+-otvorimo web stranicu https://www.json.org/json-en.html
+-kreiramo metodu app.get()
+-u metodu app.get() dodajemo res.json()
+-otvorimo web stranicu https://expressjs.com/en/4x/api.html#res.json
+-u metodu res.json() dodajemo dva objekta
+-kreiramo varijablu const { products } = require('./data.js');
+-instaliramo Google Chrome ekstenziju JSON Formatter
+
+67. Params, Query String - Setup
+-u metodu res.send() dodajemo HTML elemente h1 i a
+-kreiramo metodu app.get() za rutu /api/products
+-kreiramo varijablu const newProducts
+-dodajemo metodu res.json(newProducts)
+
+68. Params
+-kreiramo metodu app.get() za rutu /api/products/1
+-kreiramo varijablu const singleProduct
+-kreiramo metode app.get() za rutu /api/products/:productID
+-kreiramo varijablu const { productID } = req.params
+-kreiramo varijablu const singleProduct
+-dodajemo uslov if (!singleProduct)
+-u uslov if (!singleProduct) dodajemo metodu res.status(404).send('...')
+
+69. Params - Extra Info
+-kreiramo metodu app.get() za rutu /:reviewID
+
+70. Query String
+-otvorimo web stranicu
+-kreiramo metode app.get() za rutu /api/v1/query
+-u pretrazivac ukucamo http://localhost:5000/api/v1/query?name=kerim&id=1
+-kreiramo varijable const { search, limit } = req.query
+-kreiramo varijablu let sortedProducts = [...products]
+-dodajemo uslov if (search) 
+-u uslov if (search) dodajemo varijablu sortedProducts
+-dodajemo uslov if (limit)
+-u uslov if (limit) dodajemo varijablu sortedProducts
+-dodajemo metodu res.status(200).json(sortedProducts)
+-u pretrazivac ukucamo http://localhost:5000/api/v1/query?search=a
+-u pretrazivac ukucamo http://localhost:5000/api/v1/query?limit=1
+-dodajemo uslov if (sortedProducts.length < 1)
+-u uslov if (sortedProducts.length < 1) dodajemo  res.status(200).send('...')
+
+71. Additional Params and Query String Info
+
+72. Middleware - Setup
+-kreiramo dvije metode app.get() za rute home i about
+-u metodi app.get() za rutu home kreiramo tri varijable
+-kreiramo funkciju logger()
+-varijable premjestamo u funkciju logger()
+-funkciji logger() dodajemo parametre req, res, next
+-u funkciju logger() dodajemo funkciju next()
+-u rute app.get() dodajemo funkciju logger
+
+73. APP.USE
+-kreiramo fajl logger.js
+-u logger.js premjestamo funkciju logger iz app.js fajla
+-dodajemo module.exports = logger
+-u app.js fajlu kreiramo varijablu const logger = require('./logger')
+-kreiramo metodu app.use(logger)
+
+74. Multiple Middleware Functions
+-kreiramo authorize.js fajl
+-u authorize.js fajlu kreiramo funkciju authorize()
+-funkciji authorize() dodajemo tri parametra
+-u funkciju authorize() dodajemo funkciju next()
+-dodajemo module.exports = authorize
+-u app.js fajlu kreiramo varijablu const authorize = require('./authorize')
+-kreiramo metodu app.use([ logger, authorize ])
+-u authorize.js fajlu, u funkciji authorize() kreiramo varijablu const { user } = req.query
+-dodajemo uslov if - else
+-u uslov if dodajemo if (user === 'kerim')
+-u uslov else dodajemo res.status(401).send('Unathorized')
+-u pretrazivac ukucamo http://localhost:5000/?user=kerim
+-u pretrazivac ukucamo http://localhost:5000/api/items?user=kerim
+
+75. Additional Middleware Info
+-u app.js fajlu, u rutu app.get('/api/items') dodajemo diddleware [logger, authorize]
+-otvorimo web stranicu https://www.npmjs.com/package/morgan
+-u terminalu instaliramo Morgan paket
+-u terminal ukucamo komandu npm i morgan
+-u app.js fajlu kreiramo varijablu const morgan = require('morgan')
+-kreiramo metodu app.use(morgan('tiny'))
+
+76. Methods - GET
+-u app.js fajlu kreiramo varijablu let { people } = require('./data')
+-kreiramo metodu app.get() za rutu '/api/people'
+-u metodu app.get() dodajemo res.status(200).json({ ... })
+
+77. Methods - POST (Setup)
+-kreiramo foder methods-public
+-u app.js fajlu kreiramo metodu app.use(express.static('./methods-public'))
+
+78. Methods - POST(Form Example)
+-u app.js fajlu kreiramo metodu app.post() za rutu '/login'
+-kreiramo metodu app.use(express.urlencoded({ extended: false }))
+-u metodi app.post() kreiramo varijablu const { name } = req.body
+-dodajemo uslov if(name)
+-u if uslov dodajemo return res.status(200).send(`Welcome ${name}`)
+-dodajemo res.status(401).send('Please Provide Credentials...')
+
+79. Methods - POST(Javascript Example)
+-kreiramo metodu app.post() za rutu '/api/people'
+-kreiramo metodu app.use(express.json())
+-u metodi app.post('/api/people') kreiramo varijablu const { name } = req.body
+-dodajemo uslov if (!name) 
+-u uslov if (!name) dodajemo  return res.status(400).json({ ... })
+
+80. Install Postman
+-otvorimo web stranicu https://www.postman.com/
+-instaliramo program Postman za testiranje ruta
+-u Postman-u testiramo rute /api/people sa metodom GET
+-testiramo rutu /api/people sa metodom POST
+-u body napisemo objekt sa property name
+-kreiramo novu metodu app.post() za rutu '/api/postman/people'
+-testiramo rutu /api/postman/people sa metodom POST
+
+81. Methods - PUT
+-u app.js fajlu kreiramo novu metodu app.put()
+-u metodu app.put() dodajemo rutu '/api/people/:id'
+-u anonimnu funkciju (req, res) kreiramo varijablu const { id } = req.params
+-kreiramo varijablu const { name } = req.body
+-u Postman-u testiramo rutu /api/people/1 sa metodom PUT
+-u app.js fajlu, u metodu app.put() kreiramo varijablu const person 
+-dodajemo uslov if (!person)
+-kreiramo varijablu const newPeople 
+
+82. Methods - DELETE
+-u app.js fajlu kreiramo metodu app.delete()
+-kreiramo varijablu const person 
+-dodajemo uslov if (!person)
+-u objekt Number dodajemo Number(req.params.id)
+-u Postman-u kreiramo novu rutu /api/people/1 sa metodom DELETE
+-u app.js fajlu kreiramo varijablu const newPeople
+
+83. Express Router - Setup
+-kreiramo folder routes
+-u folderu routes kreiramo dva fajla - auth.js i people.js
+-u people.js fajlu kreiramo varijablu const express
+-kreiramo varijablu const router = express.Router()
+-rute '/api/people' iz app.js fajl premjestamo u people.js fajl
+-u people.js fajlu varijablu app zamjenjujemo sa varijablom router
+-dodajemo module.exports = router
+-u app.js fajlu kreiramo metodu app.use za rutu '/api/people'
+-kreiramo varijablu const people = require('./routes/people')
+-rutu '/login' iz app.js fajla premjestamo u auth.js fajl
+-u app.js fajlu kreiramo varijablu const auth
+-kreiramo dvije metode app.use() za rute '/api/people' i '/login'
+
+84. Express Router - Controllers
+-kreiramo folder controllers
+-u folderu controllers kreiramo people.js fajl
+-u people.js fajlu kreiramo funkcije
+-dodajemo module.exports = { ... }
+-u routes/people.js fajl importujemo funkcije iz controllers/people.js fajla
+-u routes/people.js fajlu kreiramo rute router.route()
