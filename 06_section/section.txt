@@ -1,0 +1,187 @@
+Section 6: Task Manager API
+
+88. Intro
+
+89. Setup
+-u package.json fajlu dodajemo komandu "start": "nodemon app.js"
+
+90. Basic Express Server
+-kreiramo varijable express, app i port
+-kreiramo metodu app.get()
+-kreiramo metodu app.listen()
+
+91. General Routes
+
+92. Route Structure and Details
+
+93. getAllTasks
+-kreiramo folder routes
+-u folderu routes kreiramo tasks.js fajl
+-u tasks.js fajlu kreiramo varijable express i router
+-kreiramo metodu router.route()
+-eksportujemo module.exports = router
+-u app.js fajlu kreiramo varijable const tasks
+-kreiramo metodu app.use()
+-kreiramo metodu app.use(express.json())
+-kreiramo folder controllers
+-u folderu controllers kreiramo tasks.js fajl
+-u controllers/tasks.js fajlu kreiramo funkciju getAllTasks()
+-dodajemo module.exports = { getAllTasks }
+-u routes/tasks.js fajlu importujemo funkciju const { getAllTasks }
+-u Postman-u testiramo rute /hello i /api/v1/tasks sa metodom GET
+
+94. All Routes
+-u controllers/tasks.js fajlu kreiramo i eksportujemo jos 4 funkcije
+-u routes/tasks.js fajl importujemo funkcije
+-kreiramo router.route('/:id')
+
+95. Postman Setup
+-kreiramo i testiramo rute u Postman-u
+
+96. REST
+
+97. MongoDB Intro
+-otvorimo web stranicu https://www.mongodb.com/
+
+98. Atlas Setup
+-otvorimo web stranicu https://www.mongodb.com/atlas/database
+
+99. DB, Network Access and Connection String
+-kreiramo folder db
+-u folderu db kreiramo connect.js fajl
+
+100. Additional Info
+
+101. MongoDB Overview
+
+102. CRUD - GUI Example
+
+103. Mongoose Info
+-otvorimo web stranicu https://mongoosejs.com/
+-u terminalu instaliramo Mongoose paket
+-u terminal ukucamo komandu npm i mongoose
+
+104. Connect to DB
+-u connet.js fajlu kreiramo varijablu const mongoose = require('mongoose')
+-varijabli mongoose dodajemo metodu .connect()
+-u app.js fajl dodajemo require('./db/connect')
+
+105. Refactor Connect
+-u connect.js fajlu kreiramo funkciju connectDB()
+-u app.js fajlu kreiramo varijablu const connectDB
+-kreiramo funkciju start()
+-u funkciju start() dodajemo try - catch blokove koda
+
+106. ENV VARS
+-otvorimo web stranicu https://www.npmjs.com/package/dotenv
+-u terminalu instaliramo DOTENT paket
+-u terminal ukucamo komandu npm i dotenv
+-kreiramo .env fajl
+-u .env fajlu kreiramo varijablu MONGO_URL
+-u .gitignore fajl dodajemo varijablu .env
+-u app.js fajl dodajemo require('dotenv').config()
+-u blok koda try dodajemo await connectDB(process.env.MONGO_URL)
+-u blok koda try dodajemo app.listen()
+
+107. First Schema and Model
+-kreiramo folder models
+-u folderu models kreiramo Task.js fajl
+-u Task.js fajlu kreiramo varijablu const mongoose = require('mongoose')
+-kreiramo objekt new mongoose.Schema({ ... })
+-vrijednost objeka pohranjujemo u varijablu const TaskSchema
+-eksportujemo module.exports = mongoose.model('Task', TaskSchema)
+
+108. Create Task
+-u controllers/tasks.js fajlu kreiramo varijablu const Task = require('../models/Task')
+-u funkciji createTask() kreiramo varijablu const task = await Task.create(req.body)
+-dodajemo res.status(201).json({ task })
+
+109. Schema Info
+
+110. Basic Validation
+-u Task.js fajlu, u objekt Schema dodajemo objekt za verifikaciju unesenih podataka
+
+111. Try/Catch Block
+-u controllers/tasks.js fajl, u funkciju createTask() dodajemo blokove koda try - catch
+-u blok koda dodajemo varijablu const tast i res.status(201).json({ task })
+-u blok koda catch dodajemo res.status(500).json({ msg: error })
+-funkcija Task.create() je built-in funkcija iz paketa Mongoose
+
+112. getAllTasks Controller
+-u controllers/tasks.js fajl, u funkciju getAllTasks() dodajemo blokove koda try - catch
+-u blok kodu try kreiramo varijablu const tasks = await Task.find({})
+-blok koda try dodajemo res.status(200).json({ tasks })
+-funkcija Task.find() je built-in funkcija iz paketa Mongoose
+
+113. getSingleTask
+-u controllers/tasks.js fajlu, u funkciju getTask() dodajemo blokove koda try - catch
+-u blok koda try dodajemo varijablu const { id: taskID } = req.params
+-kreiramo varijablu  const task = await Task.findOne({ _id: taskID })
+-dodajemo uslov if (!task) 
+-u uslov if dodajemo return res.status(404).json({ ... })
+-nakon uslov if dodajemo res.status(200).json({ task })
+-funkcija Task.findOne() je built-in funkcija iz paketa Mongoose
+
+114. Two Errors
+
+115. Delete Task
+-u controllers/tasks.js fajlu, u funkciju deleteTask() dodajemo blokove koda try - catch
+-u bloku koda try kreiramo varijablu const { id: taskID } = req.params
+-kreiramo varijablu const task = await Task.findOneAndDelete()
+-funkcija Task.findOneAndDelete() je built-in funkcija iz paketa Mongoose
+-dodajemo uslov if (!task)
+-nakon uslov if dodajemo res.status(200).json({ task })
+-u funkciju deleteTask() mozemo napisati: res.status(200).json({ task: null, status: 'success '}) ili res.status(200).send()
+
+116. Update Task
+-u controllers/tasks.js fajlu, u funkciju updateTask() dodajemo blokove koda try - catch
+-u bloku koda try kreiramo varijablu const { id: taskID } = req.params
+-kreiramo varijablu const task = await Task.findOneAndUpdate({ ... })
+-funkcija Task.findOneAndUpdate() je built-in funkcija iz paketa Mongoose
+-dodajemo uslov if (!task)
+-nakon uslova if dodajemo res.status(200).json({ task })
+-u sve blokove koda dodajemo isti kod
+
+117. Add Front-End
+-u app.js fajl kreiramo metodu app.use(express.static('./public'))
+
+118. PUT vs PATCH
+
+119. Responses Types
+
+120. Not Found
+-kreiramo folder middleware
+-u folderu middleware kreiramo not-found.js fajl
+-u not-found.js fajlu kreiramo funkciju notFound()
+-u app.js fajlu kreiramo varijablu const notFound = require('./middleware/not-found')
+-kreiramo rutu app.use(notFound)
+
+121. Async Wrapper
+-u folderu middleware kreiramo async.js fajl
+-u async.js fajlu kreiramo asinhronu funkciju asyncWrapper
+-u controllers/tasks.js fajlu kreiramo varijablu const asyncWrapper
+-u funkciju getAllTasks() dodajemo funkciju asyncWrapper()
+-funkciju asyncWrapper() dodajemo u sve funkcije u tasks.js fajlu
+
+122. Custom Error Handler
+-otvorimo web stranicu https://expressjs.com/en/guide/error-handling.html#the-default-error-handler
+-u folderu middleware kreiramo error-handler.js 
+-u error-handler.js fajlu kreiramo funkciju errorHandlerMiddleware() sa 4 parametra
+-u app.js fajlu kreiramo varijablu const errorHandlerMiddleware = require('./middleware/error-handler')
+-kreiramo metodu app.use(errorHandlerMiddleware)
+
+123. Custom Error Class
+-u controllers/tasks.js fajlu, u funkciji getTask() kreiramo varijablu const error
+-varijabli error dodajemo metodu status
+-dodajemo return next(error)
+-kreiramo folder errors
+-u folderu errors kreiramo custom-error.js fajl
+-u custom-error.js fajlu kreiramo klasu CustomAPIError
+-kreiramo funkciju createCustomError()
+-eksportujemo klasu i funkciju
+-u error-handler.js fajlu kreiramo varijablu const { CustomAPIError } = require('../errors/custom-error')
+-dodajemo uslov if (err instanceOf CustomAPIError)
+
+124. PORT Variable
+
+125. Outro
