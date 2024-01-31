@@ -1,0 +1,122 @@
+Section 7: Store API
+
+126. Intro
+
+127. Setup
+
+128. Basic Express App
+-kreiramo .env fajl
+-u terminalu instaliramo dotenv paket
+-u terminal ukucamo komando npm i dotenv
+-u app.js fajl dodajemo require('.dotenv').config()
+-kreiramo varijable const express i const app
+-u folderu middleware kreiramo error-handler.js i not-found.js fajlove
+-u error-handler.js i not-found.js fajlovima kreiramo funkcije
+-u app.js fajlu kreiramo varijable const notFoundMiddleware i const errorMiddleware
+-kreiramo metodu app.use(express.json())
+-kreiramo metodu app.get() za rutu '/'
+-kreiramo metode app.use(notFoundMiddleware) i app.use(errorMiddleware)
+-kreiramo varijablu const port
+-kreiramo asinhronu funkciju start()
+-u funkciju start() dodajemo blokove koda try - catch
+-u blok koda try dodajemo metodu app.listen()
+
+129. Connect to DB
+-u .env fajlu kreiramo varijablu MONGO_URI
+-u app.js fajlu kreiramo varijablu const connectDB
+-u blok koda try dodajemo await connectDB(process.env.MONGO_URI)
+
+130. Router
+-u fajlu controllers/products.js kreiramo dvije funkcije getAllProductsStatic() i getAllProducts()
+-esportujemo funkcije
+-u fajlu router/products.js kreiramo varijable const express i const router
+-importujemo funkcije getAllProducts i getAllProductsStatic
+-kreiramo dvije metode router.route() za rute '/' i '/static'
+-dodajemo module.exports = router
+-u app.js fajlu kreiramo varijablu const productsRouter 
+
+131. Postman Setup
+
+132. EXPRESS-ASYNC-ERRORS
+-otvorimo web stranicu https://www.npmjs.com/package/express-async-errors
+-instaliramo paket Express Async Errors
+-u terminal ukucamo komandu npm i express-async-errors
+-u app.js fajl dodajemo require('express-async-errors')
+
+133. Product Model
+-kreiramo folder models
+-u folderu models kreiramo Product.js fajl
+-u Product.js fajlu kreiramo varijablu const mongoose
+-kreiramo varijablu const productSchema
+-u metodi mongoose.Schema({ ... }) kreiramo konfiguracione objekte
+-u objekt company dodajemo objekt enum
+-dodajemo module.exports = mongoose.model('Product', productSchema)
+
+134. Populate DB
+-kreiramo populate.js fajl
+-u populate.js fajl dodajemo require('dotenv').config()
+-kreiramo varijable const connectDB, const Product i const jsonProducts
+-kreiramo asinhronu funkciju start()
+-u funkciju start() dodajemo blokove koda try - catch
+-u blok koda try dodajemo await connectDB()
+-dodajemo await Product.deleteMany()
+-dodajemo await Product.create(jsonProducts)
+
+135. Basic Find
+-u products.js fajlu kreiramo varijablu const Product 
+-u funkciji getAllProductsStatic() kreiramo varijablu const products
+-metoda Product.find() je iz paketa mongoose
+
+136. Query Params
+-otvorimo web stranicu https://hn.algolia.com/api
+-u products.js fajlu, u funkciji getAllProducts() kreiramo varijablu const products
+
+137. Mongoose V6 Update
+
+138. Refactor to QueryObject
+-u products.js fajlu, u funkciji getAllProducts() kreiramo varijablu const { featured }
+-kreiramo varijablu objekt const queryObject
+-dodajemo uslov if (featured)
+
+139. Company
+-u products.js fajlu, u funkciji getAllProducts() kreiramo varijablu if (company)
+
+140. Name
+-u funkciju getAllProducts() dodajemo uslov if (name)
+-otvorimo web stranicu https://www.mongodb.com/docs/manual/reference/operator/query/
+-u funkciji getAllProductsStatic() kreiramo varijablu const searcu
+-u property name dodajemo $regex: search
+-u uslov if (name) dodajemo  queryObject.name = { $regex: name, $options: 'i' }
+
+141. Sort - General Setup
+
+142. Sort - getAllProducts Implementation
+-u products.js fajlu kreiramo varijablu let result
+-dodajemo uslov if (sort)
+-u uslovu if (sort) kreiramo varijablu const sortList
+
+143. Select Option
+-u products.js fajlu, u funkciji getAllProducts() dodajemo uslov if (fields)
+-u uslovu if (fields) kreiramo varijablu const fieldsList
+
+144. Skip and Limit - General Info
+
+145. Pagination
+-u products.js fajlu, u funkciji getAllProducts kreiramo tri varijable const page, const limit i const skip
+
+146. Numeric Filters - Setup
+-u products.js fajl, u metodu find() dodajemo price: { $gt: 30 }
+
+147. Numeric Filters - Regex
+-u products.js fajl, u funkciju getAllProducts() dodajemo uslov if (numericFilters)
+-u uslovu if kreiramo varijablu const operatorMap
+-kreiramo varijablu const regEx
+kreiramo varijablu let filters
+
+148. Numeric Filters - Complete
+-kreiramo varijablu const options
+-varijabli filters dodajemo metodue split() i forEach()
+-kreiramo varijable const [field, operator, value] 
+-dodajemo uslov if (options.includes(field))
+
+149. Outro
