@@ -1,0 +1,108 @@
+Section 8: JWT - Basics
+
+150. Intro
+
+151. Setup
+-preuzmemo pocetne fajlove
+-instaliramo projekt u terminalu 
+-u terminal ukucamo komandu npm init
+
+152. Controllers
+-u controllers/main.js fajlu kreiramo funkciju login()
+-kreiramo funkciju dashboard()
+-u funkciji dashboard() kreiramo varijablu const luckyNumber
+-u module.exports dodajemo funkcije login i dashboard
+-u routes/main.js fajlu kreiramo varijable const express i const routes
+-kreiramo varijable const { login, dashboard } = require('../controllers/main')
+-kreiramo rutu router.route('./dashboard').get(dashboard)
+-kreiramo rutu router.route('./login').post(login)
+-eksportujemo varijablu module.exports = router
+-u app.js fajlu kreiramo varijablu const mainRouter = require('./routes/main')
+-kreiramo metodu app.use('/api/v1/', mainRouter)
+
+153. Postman Setup
+-u Postman-u kreiramo novu kolekciju ruta
+
+154. Validate Username and Password 
+-u funkciji login kreiramo varijable const { username, password } = req.body
+-u controllers/main.js fajlu kreiramo varijablu const CustomAPIError
+-u funkciju login() dodajemo uslov if (!username || !password)
+
+155. JWT - Overview
+
+156. JWT - Structure
+-otvorimo web stranicu https://jwt.io/
+
+157. JSONWEBTOKEN Package
+-otvorimo web stranicu https://www.npmjs.com/package/jsonwebtoken
+-u terminalu instaliramo Json Web Token paket
+-u terminal ukucamo komandu npm i jsonwebtoken
+
+158. Sign JWT
+-u controllers/main.js fajlu kreiramo varijablu const jwt = require('jsonwebtoken')
+-u funkciji login() kreiramo varijablu const token 
+-kreiramo varijablu const id
+-u metodu.sign() dodajemo konfiguracioni objekt
+-kreiramo .env fajl
+-u .env fajlu kreiramo varijablu JWT_SECRET
+
+159. Bearer Token - Overview
+
+160. Send Bearer Token
+-u Postman-u, u ruti Dashboard, dodajemo Header Key: Authorization, Value: Bearer token
+
+161. Check Auth Header
+-u funkciji dashboard() kreiramo varijablu const authHeader
+-dodajemo uslov if (!authHeader || !authHeader.startsWith('Bearer '))
+-u uslov if dodajemo objekt throw new CustomAPIError(...)
+-kreiramo varijablu const token = authHeader.split(' ')[1]
+
+162. Verify Token
+-u funkciju dashboard() dodajemo blokove koda try - catch
+-u bloku koda try kreiramo varijablu const decoded
+
+163. Auth Middleware Setup
+-u folderu middleware kreiramo auth.js fajl
+-u auth.js fajlu kreiramo asinhronu funkciju authenticationMiddleware()
+-funkciji authenticationMiddleware() dodajemo parametre req, res, next
+-eksportujemo funkciju module.exports = authenticationMiddleware
+-u routes/main.js fajlu kreiramo varijable const authMiddleware
+
+164. Auth Middleware Complete
+-u auth.js fajlu kreiramo varijablu const jwt
+-kreiramo varijablu const CustomAPIError
+-u funkciju authenticationMiddleware() premjestamo kod iz controllers/main.js fajla
+-u auth.js fajlu, u bloku koda try kreiramo varijable consts { id, username }
+-dodajemo req.user = { id, username }
+-dodajemo next()
+
+165. More Error Classes
+-u folderu errors kreiramo index.js fajl, bad-request.js, unauthenticated.js
+-u bad-request.js fajlu kreiramo klasu BadRequest
+-kreiramo varijablu const CustomAPIError
+-klasi BadRequest dodajemo extends CustomAPIError
+-eksportujemo klasu BadRequest module.exports = BadRequest
+-u unauthenticated.js fajlu kreiramo klasu Unauthenticated
+-klasi Unauthenticated dodajemo extends CustomAPIError
+-eksportujemo klasu Unauthenticated module.exports = Unauthenticated
+-u index.js fajlu kreiramo varijable CustomAPIError, BadRequestError, UnauthenticatedError
+-u module.exports dodajemo varijable
+
+166. Status Codes
+-otvorimo web stranicu https://www.npmjs.com/package/http-status-codes
+-u terminalu instaliramo Http Status Codes paket
+-u terminal ukucamo komandu npm i http-status-codes
+-u bad-request.js fajlu kreiramo varijablu const { StatusCodes }
+-u metodu constructor(message) dodajemo this.statusCode = StatusCodes
+-u unauthenticated.js fajlu kreiramo varijablu const { StatusCodes }
+-u metodu constructor(message) dodajemo this.statusCode = StatusCodes
+
+167. More Refactor - Complete App
+-u auth.js fajlu kreiramo varijablu const { UnauthenticatedError }
+-u uslov if dodajemo UnauthenticatedError('...')
+-u blok koda catch (error) dodajemo throw new UnauthenticatedError('...')
+-u controllers/main.js fajlu kreiramo varijablu const { BadRequestError}
+-u uslov if dodajemo throw new BadRequestError('...')
+-u error-handler.js fajlu kreiramo varijablu const CustomAPIError
+-kreiramo varijablu const { StatusCodes }
+-u uslov if dodajemo, u return izjavu dodajemo StatusCodes
