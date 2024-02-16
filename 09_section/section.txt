@@ -1,0 +1,228 @@
+Section 9: Jobs API
+
+168. Intro
+
+169. Setup
+-preuzmemo pocetne foldere i fajlove
+-instaliramo projekt sa komandom u terminalu npm i
+-kreiramo .env fajl
+
+170. Controllers
+-u controllers/auth.js fajlu kreiramo i eksportujemo funkcije register() i login()
+-u controllers/jobs.js fajlu kreiramo i eksportujemo pet funkcija
+
+171. Routes
+-u router/auth.js fajlu kreiramo varijable express i router
+-importujemo funkcije register i login
+-kreiramo dvije metode router.post()
+-dodajemo module.exports = router
+-u routes/route.js fajlu kreiramo varijable express i router
+-importujemo pet funkcija
+-kreiramo dvije metode router.route()
+-dodajemo module.exports = router
+-u app.js fajlu kreiramo varijable authRouter i jobsRouter
+-kreiramo dvije metode app.use() za auth i jobs
+
+172. Database Connection
+-u app.js fajlu kreiramo varijablu const connectDB
+-u funkciju start() dodajemo await connectDB(process.env.MONGO_URI)
+
+173. User Schema
+-u User.js fajlu kreiramo varijablu const mongoose
+-kreiramo varijablu const UserSchema
+-eksportujemo varijable UserSchema
+
+174. Create User - Basic Setup
+-u controllers/auth.js fajlu kreiramo varijablu const User
+-importujemo varijablu StatusCodes 
+-u Postman-u kreiramo rutu /api/v1/auth/register sa metodom POST
+-u funkciji register() kreiramo varijablu const user
+
+175. Error Checking - Controller Example
+-u connectDB/auth.js fajlu, u funkciji register() kreiramo varijable name, email, password
+-dodajemo uslov if ako jedna od varijabli nedostaje
+-importujemo objekt BadRequestError
+-u uslov if dodajemo objekt BadRequestError(...)
+
+176. Hashing Password Info
+-nikada ne spremamo sifru u bazu podataka
+
+177. Hash User Password
+-u terminalu instaliramo paket bcrypt
+-u controllers/auth.js fajlu kreiramo varijablu const bcrypt
+-u funkciji register() kreiramo varijablu const salt
+-kreiramo varijablu const hashedPassword
+-kreiramo varijablu const tempUser
+
+178. Mongoose Middleware
+-u User.js fajlu kreiramo varijablu const bcrypt
+-kreiramo metodu UserSchema.pre()
+-funkciji pre() dodajemo dva argumenta, ime metode i asinhronu funkciju
+-u asinhronoj funkciji kreiramo varijablu const salt
+-dodajemo metodu this.password
+-pozivamo funkciju next()
+
+179. Generate Token - Controller
+-u controllers/auth.js fajlu kreiramo varijablu const jwt
+-u funkciji register() kreiramo varijablu const token
+
+180. Generate Token - Instance Method
+-u User.js fajlu kreiramo varijablu const jwt
+-kreiramo metodu UserSchema.methods.createJWT({ ... })
+
+181. JWT_SECRET and JWT_LIFETIME
+-otvorimo web stranicu https://acte.ltd/utils/randomkeygen
+-kreiramo key.js da generisemo random  256-bit kljuc
+-u .env fajlu kreiramo varijable JWT_SECRET i JWT_LIFETIME
+-u User.js fajlu pristupamo .env varijablama
+
+182. Login Controller Setup
+-u controllers/auth.js fajlu, u funkciji login() kreiramo varijable const { email, password }
+-dodajemo uslov if (!email || !password)
+-u uslov if dodajemo novi objekt BadRequestError
+-kreiramo varijablu const user
+-dodajemo uslov if (!user)
+-kreiramo varijablu const token
+-dodajemo res.status(StatusCodes.OK).json({ ... })
+-kreiramo novu rutu u Postman-u za login
+
+183. Compare Password
+-u User.js fajlu kreiramo metodu UserSchema.methods.comparePassword
+-u anonimnoj funkciji kreiramo varijablu const isMatch
+-u controllers/auth.js fajlu, u funkciji login() kreiramo varijablu const isPasswordCorrect
+-dodajemo uslov if (!isPasswordCorrect)
+-u uslov if dodajemo throw new UnauthenticatedError(...)
+
+184. Auth Middleware - Setup
+-u middleware/authentication.js fajlu kreiramo varijablu const User
+-kreiramo varijablu const jwt
+-importujemo objekt UnauthenticatedError
+-kreiramo asinhronu funkciju auth() sa tri parametra req, res, next
+-u funkciji auth() kreiramo varijablu const authHeader
+-dodajemo uslov if (!authHeader || ... )
+-u uslov if dodajmo objekt new UnauthenticatedError('...')
+-kreiramo varijablu const token
+-dodajemo blokove koda try - catch
+-u bloku koda try kreiramo varijablu const payload
+-dodajemo req.user
+-u blok koda catch dodajemo objekt UnauthenticatedError('...')
+-dodajemo module.exports = auth
+
+185. Auth Middleware - Testing
+-u app.js fajlu kreiramo varijablu const authenticateUser
+-u metodu app.use() za poslove dodajemo middleware authenticateUser
+
+186. Alernative Code
+
+187. Job Model
+-u Job.js fajlu kreiramo varijablu const mongoose
+-kreiramo novu metodu mongoose.Schema({ ... })
+-u funkciji Schema({ ... }) kreiramo objekte za kompaniju, poziciju, status, createdBy
+-vrijednost metode new mongoose.Schema({ ... }) pohranjujemo u varijablu const JobSchema
+
+188. Create Job Route
+-u controllers/jobs.js fajlu kreiramo varijablu const Job
+-importujemo varijablu StatusCodes
+-importujemo varijable BadRequestError, NotFoundError
+-u funkciji createJob() kreiramo varijablu const job
+-dodajemo metodu req.body.createdBy
+-dodajemo metodu res.status(StatusCodes.CREATED).json({ job })
+
+189. Get All Jobs
+-u controllers/jobs.js fajlu , u funkciji getAllJobs() kreiramo varijablu const jobs
+-dodajemo metodu res.status(StatusCodes.OK).json({ jobs, count })
+-u Postman-u kreiramo rutu get za poslove
+
+190. Set Token Dynamically in Postman
+
+191. Get Single Job
+-u Postman-u kreiramo rutu za Get Single Job
+-u controllers/jobs.js fajlu, u funkciji getJob() destruktuiramo varijable userId i jobId
+-kreiramo varijablu const job
+-dodajemo uslov if !(job)
+-dodajemo metodu res.status(StatusCodes.OK).json({ job })
+
+192. Update Job
+-u Postman-u kreiramo rutu za Update Single Job
+-u controllers/jobs.js fajlu, u funkciji updateJob() destruktuiramo varijable company, position, userId i jobId
+-dodajemo uslov if ako je kompanija ili pozicija prazan string
+-u uslov if dodajemo throw new BadRequestError('...')
+-kreiramo varijablu const job
+-dodajemo uslov if (!job)
+-u uslov if dodajemo throw new BadRequestError('...')
+
+193. Remove Job
+-u Postman-u kreiramo rutu za Delete Single Job
+-u controllers/jobs.js fajlu, u funkciji deleteJob() destruktuiramo varijable userId i jobId
+-kreiramo varijablu const job
+-dodajemo uslov if (!job)
+-dodajemo metodu res.status(StatusCodes.OK).send();
+
+194. Duplicate Error
+-u error-handler.js fajlu kreiramo varijablu let customError = { ... }
+-u varijablu customError dodajemo property statusCode i msg
+-modifikujemo res.status() sa varijablom customError
+-dodajemo uslov if(err.code && err.code === 11000)
+-u uslov if dodajemo customError.msg
+-dodajemo customError.statusCode = 400
+
+195. Custom Error
+
+196. Validation Error
+-u error-handler.js fajl dodajemo uslov if(err.name === 'ValidationError')
+-u uslov if dodajemo customError.msg 
+-dodajemo customError.statusCode = 400
+
+197. Cast Error
+-u error-handler.js fajl dodajemo uslov if (err.name === 'CastError')
+-u uslov if dodajemo customError.msg
+-dodajemo customError.statusCode = 404
+
+198. Security Info and Packages
+-helmet, cors, xss-clean, express-rate-limit
+
+199. Security Setup
+-u terminalu instaliramo gore navedene pakete
+-u app.js fajlu kreiramo varijable helmet, cors, xss, rateLimiter
+-kreiramo metode za funkcije helmet(), cors(), xss(), rateLimiter()
+-u funkciju rateLimiter() dodajemo konfiguracioni objekt { ... }
+
+200. Additional Info
+
+201. Heroku Update !!!
+
+202. Heroku Info
+-kreiranje profila na web platformi Heroku
+-instaliranje Heroku CLI
+
+203. Deploy to Heroku
+-u app.js fajlu kreiramo metodu app.get() za rutu '/'
+-kreiramo fajl Procfile
+-u fajl Procfile dodajemo web: node app.js
+
+204. Swagger UI Info
+-otvorimo web stranicu https://swagger.io/
+
+205. Clone Existing Heroku Project
+
+206. Export Postman Docs
+
+207. APIMATIC Info
+-otvorimo web stranicu https://www.apimatic.io/
+
+208. APIMATIC Setup
+
+209. Swagger UI Editor
+
+210. Add Swagger UI
+-u terminalu instaliramo pakete yamljs i swagger-ui-express
+-kreiramo fajl swagger.yaml
+-u app.js fajlu kreiramo varijable swaggerUI, YAML i swaggerDocument
+-kreiramo metodu app.use() za rutu '/api-use'
+
+211. Render Signup
+-kreiranje korisnickog naloga
+
+212. Github Repo
+
+213. Render Deployment
