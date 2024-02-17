@@ -1,0 +1,71 @@
+Section 11: Image Upload
+
+243. Intro
+
+244. Setup
+-preuzmemo pocetne foldere i fajlove
+
+245. Product Model
+-u Product.js fajlu kreiramo varijablu const ProductSchema 
+
+246. Basic Structure
+-u productController.js fajlu kreiramo varijablu const Product
+-importujemo objekt StatusCodes
+-kreiramo dvije funkcije createProduct() i getAllProducts()
+-u uploadsController.js fajl importujemo objekt StatusCodes
+-kreiramo funkciju uploadProductImage()
+-u productRoutes.js fajlu kreiramo varijable express i router
+-importujemo funkcije iz foldera controllers
+-kreiramo dvije metode za routers.route()
+-u app.js fajlu kreiramo varijablu const productRouter
+-kreiramo metodu app.use(express.json())
+-kreiramo metodu app.use('/api/v1/products', productRouter)
+
+247. Postman Setup
+-kreiramo tri rute u Postman-u
+
+248. Create Product (Fail)
+-u productController.js fajlu, u funkciji createProduct kreiramo varijablu const product
+-dodajemo metodu res.status(StatusCodes.CREATED).json({ product })
+
+249. Upload Image - Postman
+-u Postman-u, u metodi {{URL}}/products/uploads, u opciji body odaberemo opciju form-data
+-dodajemo kljuc image i opciju file
+-u opciju value dodajemo sliku
+-otvorimo link https://www.npmjs.com/package/express-fileupload
+-u terminalu instaliramo paket express-fileupload
+
+250. Express-fileupload Package
+-u app.js fajlu kreiramo varijablu const fileUpload 
+-kreiramo metodu app.use(fileUpload())
+-u uploadsController.js fajlu, u funkciji uploadProductImage() kreiramo varijablu const productImage
+-kreiramo varijablu const imagePath
+-dodajemo await productImage.mv(imagePath)
+-na pocetku fajla kreiramo varijablu const path
+-u app.js fajlu kreiramo app.use(express.static('./public'))
+
+251. Complete File Upload
+-u productController.js fajlu, u funkciji getAllProducts() kreiramo varijablu const products
+-dodajemo res.status(StatusCodes.OK).json({ products })
+
+252. Additional Checks
+-u uploadsController.js fajlu kreiramo varijablu const CustomError
+-u funkciju uploadProductImage() dodajemo uslov if (!req.files)
+-dodajemo uslov if (!productImage.mimetype.startsWith('image'))
+-kreiramo varijablu const maxSize
+-dodajemo uslov if (productImage.size > maxSize) 
+
+253. Cloudinary Intro
+-otvorimo web stranicu https://cloudinary.com/
+-kreiramo racun na Cloudinary
+-u .env fajlu kreiramo varijable CLOUD_NAME, CLOUD_API_KEY, CLOUD_API_SECRET
+
+254. Cloudinary Setup
+-otvorimo link https://www.npmjs.com/package/cloudinary
+-u terminalu instaliramo Cloudinary paket
+-u app.js fajlu kreiramo varijablu const cloudinary
+-varijabli cloudinary dodajemo metodu .config()
+
+255. Upload Image to Cloudinary
+
+256. Remove Temp Files
