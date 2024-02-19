@@ -1,0 +1,28 @@
+Section 12: Send Emails
+
+257. Intro
+
+258. Setup
+
+259. Nodemailer Info
+-otvorimo web stranicu https://nodemailer.com/
+
+260. Ethereal Info and Account
+-otvorimo web stranicu https://ethereal.email/
+
+261. Send Emails With Ethereal
+-otvorimo link https://www.npmjs.com/package/nodemailer
+
+262. SendGrid Info
+
+263. Sender Identify
+
+264. Send Emails with SendGrid
+-kreiramo .env fajl
+-u .env fajlu kreiramo varijablu SENDGRID_API_KEY
+-u terminalu instaliramo paket sendgrid u terminalu
+-kreiramo funkciju sendEmail()
+-u funkciji sendEmail() kreiramo varijablu const msg
+-kreiramo varijablu const info
+-dodajemo metodu res.json(info)
+-u .env fajlu kreiramo dvije varijable EMAIL_SENDER i EMAIL_RECEIVER
