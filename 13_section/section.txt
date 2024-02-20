@@ -1,0 +1,26 @@
+Section 13: Stripe Payment
+
+265. Intro
+
+266. Setup
+
+267. General Overview
+
+268. API Keys
+-otvorimo web stranicu https://stripe.com/
+
+269. Flow Overview
+-u terminalu instaliramo Stripe paket
+-u termina ukucamo komandu npm i stripe
+
+270. Controller Setup
+-u app.js fajlu kreiramo metodu app.post('/stripe', stripeController)
+-u stripeController.js fajlu kreiramo i eskportujemo funkciju stripeController()
+-u app.js fajlu kreiramo varijablu const stripeController
+
+271. Complete Payment
+-u stripeController.js fajlu kreiramo varijablu const stripe
+-u funkciji stripeController() kreiramo varijable purchase, total_amount, shipping_fee
+-kreiramo funkciju calculateOrderAmount()
+-kreiramo varijablu const paymentIntent
+-kreiramo metodu res.json({ ... })
