@@ -1,0 +1,117 @@
+Section 10: Jobster API (Extra Project)
+
+214. Intro
+
+215. Setup
+
+216. Spring Cleaning
+
+217. Client Folder
+
+218. Setup Front-end
+-u terminalu udemo u direktoriji cd client
+-u terminalu ukucamo komandu npm run build
+-u app.js fajlu kreiramo varijablu const path = require('path');
+-kreiramo metodu app.use(express.static(...))
+-kreiramo metodu app.get('*', ...)
+
+219. Modify User Model
+-u User.js fajlu kreiramo objekte lastName i location
+
+220. Modify Register and Login
+-u auth.js fajlu, u funkciji register(), u metodu res.json({ }) dodajemo objekt user
+-isto ponovimo u funkciji login()
+
+221. Create Test User
+
+222. Update User - Setup
+-u controllers/auth.js fajlu kreiramo funkciju updateUser()
+-u routes/auth.js fajlu kreiramo varijablu const authenticateUser
+-importujemo funkciju updateUser
+-kreiramo metodu router.patch za rutu '/updateUser'
+
+223. Update User - Complete
+-u controllers/auth.js fajlu, u funkciji updateUser() kreiramo varijable email, name, lastName, location
+-dodajemo uslov if
+-u uslov if dodajemo objekt Error
+-kreiramo varijablu const user
+-redeklarisemo azurirane varijable
+-dodajemo metodu await user.save()
+-kreiramo varijablu token
+-kreiramo metodu res.status(StatusCodes.OK).json({ ... })
+
+224. Password "Gotcha"
+-u User.js fajlu, u metodu UserSchema.pre() dodajemo uslov if
+
+225. Complete Jobs CRUD Functionality
+-u Jobs.js fajl dodajemo objekte jobTypes i jobLocation
+
+226. Fake Data - Mockaroo
+-otvorimo web stranicu https://www.mockaroo.com/
+-kreiramo dummy podatke
+
+227. Populate Database
+-kreiramo populate.js fajl
+-importujemo dotenv
+-kreiramo tri varijable mockData, Job, connectDB
+-kreiramo asinhronu funkciji start()
+-u funkciji start() kreiramo blokove koda try - catch
+-u blok koda try dodajemo await connectDB()
+-dodajemo await Job.create(mockData)
+-u terminal ukucamo komandu node populate
+
+228. Search Functionality - Intro
+
+229. Search Input
+-u controllers/jobs.js, u funkciji getAllJobs() kreiramo varijable search, status, jobType, sort
+-kreiramo objekt const queryObject 
+-kreiramo varijablu let result
+-kreiramo varijablu const jobs
+-dodajemo uslov if (search)
+
+230. Status ans JobType
+-u funkciju getAllJobs() dodajemo uslov if (status && status !== 'all') 
+-dodajemo uslov if (jobType && jobType !== 'all')
+
+231. Sort
+-u funkciju getAllJobs() dodajemo cetiri uslova za varijablu sort
+
+232. Pagination
+-u funkciju getAllJobs() kreiramo varijable 
+-kreiramo varijable totalJobs i numOfPages
+
+233. Check For Test User in Auth Middleware
+
+234. Restrict CRUD to Test User
+-u folderu niddleware kreiramo testUser.js fajl 
+-u testUser.js fajl importujemo objekt BadRequestError
+-kreiramo funkciju testUser() sa tri parametra req, res, next
+
+235. API Limiter
+-u routes/auth.js fajlu kreiramo varijablu const rateLimiter
+-kreiramo varijablu const apiLimiter
+
+236. Stats Intro
+
+237. ShowStats Controller
+-u controllers/jobs.js fajlu kreiramo asinhronu funkciju showStats() sa dva parametra req i res
+-u funkciji showStats() kreiramo metodu res.status(StatusCodes.OK).json({ ... })
+-eksportujemo funkciju showStats
+-u routes/jobs.js fajlu kreiramo metodu router.route() za rutu stats
+
+238. Setup Status Aggregation Pipeline
+-otvorimo link https://www.npmjs.com/package/moment
+-u terminalu instaliramo Moment paket sa komandom npm i moment
+-u funkciji showStats kreiramo varijablu let stats
+-u metodu Job.aggregate([ ... ]) kreiramo konfiguracione objekte
+
+239. Refactor Status Data
+-u funkciji showStats() redeklarisemo varijablu stats sa metoduom stats.reduce(...)
+-u controllers/auth.js fajlu kreiramo varijablu const defaultStats
+
+240. Setup Monthly Applications Aggregation Pipeline
+-u controllers/auth.js fajlu kreiramo varijablu const monthlyApplications
+
+241. Refactor Monthly Applications Data
+
+242. Deployment
