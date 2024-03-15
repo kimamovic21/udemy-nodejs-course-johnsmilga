@@ -1,0 +1,422 @@
+Section 14: E-Commerce API
+
+272. Intro
+
+273. Setup
+-instaliranje paketa u terminalu
+
+274. Basic Express Server
+
+275. Connect To DB
+
+276. Basic Routes
+
+277. notFound vs ErrorHandler Middleware
+
+278. Morgan Package
+
+279. User Model
+-kreiramo folder models
+-u folderu models kreiramo User.js fajl
+
+280. Validator Package
+-u User.js fajl dodajemo property validator
+
+281. Auth Routes Structure
+-kreiramo folder controllers
+-u folderu controllers kreiramo authController.js fajl
+-u authController.js fajlu kreiramo tri funkcije register(), login(), logout()
+-eksportujemo funkcije
+-kreiramo folder routes
+-u folderu routes kreiramo authRoutes.js fajl
+-u authRoutes.js fajlu kreiramo varijable express i router
+-importujemo funkcije iz authController.js fajla
+-kreiramo tri metode router.post()
+-eksportujemo varijablu router
+-u app.js fajlu kreiramo varijablu const authRouter
+
+282. Postman Environment Setup
+-kreiranje ruta u Postman-u
+
+283. Register - Initial Setup
+-u authController.js fajlu kreiramo varijablu const User
+-importujemo StatusCodes
+-kreiramo varijablu CustomError
+-u funkciji register() kreiramo varijablu const user
+
+284. Register - Unique Email
+-u authController.js fajlu, u funkciji register() kreiramo varijablu const { email }
+-kreiramo varijablu const emailAlreadyExists
+-dodajemo uslov if (emailAlreadyExists)
+
+285. User Roles
+-u authController.js fajlu, u funkciji register() kreiramo varijablu const isFristAccount
+-kreiramo varijablu const role
+
+286. Hash Passwords
+-u User.js fajlu kreiramo varijablu const bcrypt
+-kreiramo metodu UserSchema.pre()
+-u funkciju pre() proslijedujemo dva argumenta metodu 'save' i anonimnu funkciju
+-u anonimnu funkciju kreiramo varijablu const salt
+-kreiramo varijablu this.password
+-kreiramo metodu UserSchema.methods.comparePassword
+-u metodi UserSchema.methods.comparePassword kreiramo varijablu const isMatch
+
+287. JWT Secret
+-u authController.js fajlu kreiramo varijable const jwt
+-u funkciji register() kreiramo metodu jwt.sign()
+-vrijednost metode jwt.sign() pohranjujemo u varijablu const token
+-kreiramo varijablu const tokenUser
+-u .env fajlu kreiramo varijable JWT_SECRET i JWT_LIFETIME
+
+288. Refactor JWT Setup
+-kreiramo folder utils
+-u folderu utils kreiramo fajlove index.js i jwt.js
+-u jwt.js fajlu kreiramo funkciju createJWT()
+-kreiramo funkciju isTokenValid()
+-u authController.js fajl importujemo funkciju createJWT()
+-u funkciju register() dodajemo funkciju createJWT()
+
+289. Cookies Setup
+-u authController.js fajlu, u funkciji register() kreiramo varijablu const oneDay
+-kreiramo metodu res.cookie()
+
+290. Parse Cookies
+-u app.js fajlu kreiramo varijablu const cookieParser
+-kreiramo metodu app.use(cookieParser())
+
+291. Refactor Cookies Setup
+-u jwt.js fajlu kreiramo funkciju attachCookiesToResponse()
+-u funkciji attachCookiesToResponse() kreiramo varijablu const token
+-u authController.js fajl importujemo funkciju attachCookiesToResponse
+-u funkciju register() dodajemo attachCookiesToResponse({ res, user: tokenUser })
+
+292. Signed and Secure Flag
+
+293. Login Route
+-u authController.js fajlu, u funkciji login() kreiramo varijable const { email, password }
+-dodajemo uslov if (!email || !password)
+-kreiramo metodu User.findOne({ email })
+-vrijednost metode User.findOne({ email }) pohranjujemo u varijablu const user
+-dodajemo uslov if (!user)
+-kreiramo metodu user.comparePassword(password)
+-vrijednost metode user.comparePassword(password) pohranjujemo u varijablu const isPasswordCorrect
+-dodajemo uslov if (!isPasswordCorrect)
+-kreiramo varijablu const tokenUser
+-dodajemo funkciju attachCookiesToResponse()
+-dodajemo res.status
+
+294. Logout Route
+-u authController.js fajlu, u funkciji logout() kreiramo metodu res.cookie()
+-dodajemo metodu res.status()
+
+295. Cookies - Big Picture and "Gotchas"
+
+296. User Routes - Structure
+-u folderu controllers kreiramo userController.js fajl
+-u userController.js fajlu kreiramo pet funkcija
+-eksportujemo funkcije
+-u folderu routes kreiramo userRoutes.js fajl
+-u userRoutes.js fajl importujemo pet funkcija iz userController.js fajla
+-kreiramo pet metoda za router.route()
+-u app.js fajlu kreiramo varijablu const userRouter
+-kreiramo metodu app.use('/api/v1/users', userRouter)
+
+297. User Routes - Postman
+-kreiramo rute u Postman-u
+
+298. getAllUsers and getSingleUser
+-u userController.js fajlu kreiramo varijablu const User
+-kreiramo varijablu StatusCodes
+-kreiramo varijablu const CustomError
+-u funkciji getAllUsers() kreiramo varijablu const users
+-dodajemo metodu res.status()
+-u funkciji getSingleUser() kreiramo varijablu const user
+-dodajemo uslov if (!user)
+-dodajemo metodu res.status()
+
+299. Authenticate User - Setup
+-kreiramo folder middleware
+-u folderu middleware kreiramo authentication.js fajl
+-u authentication.js fajlu kreiramo varijablu const CustomError
+-kreiramo varijablu const { isTokenValid }
+-kreiramo asinhronu funkciju authenticateUser() sa tri parametra req, res i next
+-u funkciji authenticateUser() kreiramo varijablu const token
+-dodajemo uslov if (!token)
+-dodajemo funkciju next()
+-u userRoutes.js fajlu kreiramo varijablu const { authenticateUser } 
+
+300. Authenticate User - Complete
+-u authentication.js fajlu, u funkciju authenticateUser() dodajemo blokove koda try - catch
+-u bloku koda try kreiramo varijablu const payload
+-u bloku koda try kreiramo varijable name, userId, role
+
+301. Authorize Permissions - Setup
+-u authentication.js fajlu kreiramo funkciju authorizePermissions() sa tri parametra req, res i next
+-u userRoutes.js fajl importujemo funkciju authorizePermissions
+-u folderu errors kreiramo unauthorized.js fajl
+-u unauthorized.js fajlu kreiramo klasu UnauthorizedError
+-u index.js fajl importujemo i eksportujemo klasu UnauthorizedError 
+-u authentication.js fajlu, u funkciju authorizePermissions() dodajemo uslov if() i funkciju next()
+-u authentication.js fajlu, funkciji authorizePermissions() dodajemo parametar ...roles
+
+302. Authorize Permissions - Complete
+-u authentication.js fajlu, u funkciju authorizePermissions() dodajemo anonimnu funkciju sa parametrima req, res, next
+-u anonimnu funkciju dodajemo uslov if (!roles.includes(req.user.role))
+-nakon uslova if dodajemo funkciju next()
+
+303. ShowMe Controller
+-u userController.js fajlu, u funkciji showCurrentUser() dodajemo metodu res.status()
+
+304. Update User Password Controller
+-u userController.js fajlu, u funkciji updateUserPassword() kreiramo varijable const { oldPassword, newPassword }
+-dodajemo uslov if (!oldPassword || !newPassword)
+-u uslov if dodajemo objekt CustomError
+-kreiramo varijablu const user
+-kreiramo varijablu const isPasswordCorrect
+-dodajemo uslov if (!isPasswordCorrect)
+-dodajemo metodu user.password = newPassword
+-dodajemo await user.save()
+-dodajemo metodu res.status()
+
+305. Create Token User Function
+-u folderu utils kreiramo createTokenUser.js fajl
+-u createTokenUser.js fajlu kreiramo funkciju createTokenUser() sa parametrom user
+-u funkciji createTokenUser(). u return izjavu dodajemo objekt
+-u index.js importujemo i eksportujemo funkciju createTokenUser
+-u authController.js fajl importujemo funkciju createTokenUser
+-u funkciji register() refaktorisemo varijablu const tokenUser = createTokenUser(user)
+-u funkciji login() refaktorisemo varijablu const tokenUser = createTokenUser(user)
+
+306. Update User Controller - FindOneAndUpdate()
+-u userController.js fajlu, u funkciji updateUser() kreiramo varijable const { email, name } = req.body
+-dodajemo uslov if (!email || !name) 
+-kreiramo varijablu const user
+-importujemo funkciju createTokenUser
+-kreiramo varijablu const tokenUser
+-importujemo funkciju attachCookiesToResponse
+-u funkciju updateUser() dodajemo funkciju attachCookiesToResponse({ res, user:tokenUser })
+-dodajemo metodu res.status()
+
+307. Update User Controller - user.save()
+-u userController.js fajlu, u funkciji updateUser(), umjesto metode User.findOneAndUpdate() dodajemo metodu User.findOne()
+-dodajemo metode user.email = email i user.name = name
+-dodajemo metodu user.save()
+-u User.js fajlu dodajemo uslov if (!this.isModified('password')) return
+
+308. Check Permissions Function
+-u folderu utils kreiramo checkPermission.js fajl
+-u checkPermission.js fajlu kreiramo funkciju checkPermissions() sa dva parametra
+-u utils/index.js fajlu kreiramo varijablu const checkPermissions 
+-eksportujemo funkciju checkPermissions
+-u userController.js fajl importujemo funkciju checkPermission
+-u funkciju getSingleUser() dodajemo funkciju checkPermissions(req.user, user._id)
+-u checkPermission.js fajlu, u funkciju checkPermissions() dodajemo uslove if
+-dodajemo objekt throw new CustomError.UnauthorizedError('...')
+
+309. Auth Complete
+
+310. Product Model
+-u folderu models kreiramo Product.js fajl
+-u Product.js fajlu kreiramo varijablu const mongoose
+-kreiramo metodu new mongoose.Schema({ ... })
+-vrijednost metode new mongoose.Schema() pohranjujemo u varijablu const ProductSchema
+
+311. Product Routes - Structure
+-u folderu controllers kreiramo productController.js fajl
+-u productController.js fajlu kreiramo sest funkcija
+-eksportujemo kreirane funkcije
+-u folderu routes kreiramo productRoutes.js fajl
+-u productRoutes.js fajl importujemo funkcije iz productController.js fajla
+-kreiramo metodu router.route('/')
+-kreiramo metodu router.route('/:id')
+-kreiramo metodu router.route('/uploadImage')
+-eksportujemo varijablu router
+-u app.js fajlu kreiramo varijablu const productRoutes
+-kreiramo metodu app.use('/api/v1/products', productRouter);
+
+312. Product Routes - Postman
+-kreiranje i testiranje ruta u Postman-u
+
+313. CreateProduct Controller
+-u productController.js fajlu kreiramo varijablu const Product
+-importujemo objekt StatusCodes
+-kreiramo varijablu const CustomError
+-u funkciji createProduct() dodajemo metodu req.body.user = req.user.userId
+-kreiramo varijablu const product
+-dodajemo metodu res.status()
+
+314. Remaining Product Controllers
+-u productController.js fajlu, u funkciji getAllProducts() kreiramo varijablu const products
+-dodajemo metodu res.status()
+-u funkciji getSingleProduct kreiramo varijablu const { id: productId }
+-kreiramo varijablu const product
+-dodajemo metodu res.status()
+-dodajemo uslov if (!product)
+-u uslov if dodajemo objekt CustomError()
+-dodajemo metodu res.status()
+-u funkciji updateProduct() kreiramo varijablu const { id: productId }
+-kreiramo varijablu const product
+-dodajemo uslov if (!product)
+-dodajemo metodu res.status()
+-u funkciji deleteProduct() kreiramo varijablu const { id: productId }
+-kreiramo varijablu const product
+-dodajemo uslov if (!product)
+-dodajemo metodu await product.remove()
+-u verziji Mongoose 7 umjesto remove() pisemo deleteOne()
+-dodajemo metodu res.status()
+
+315. Upload Image Controller
+-kreiramo folder public
+-u folderu public kreiramo folder uploads
+-u app.js fajlu kreiramo varijablu const fileUpload 
+-kreiramo metodu app.use(express.static('./public'))
+-kreiramo metodu app.use(fileUpload())
+-u productController.js fajlu, u funkciji uploadImage() dodajemo uslov if (!req.files)
+-u uslov if dodajemo objekt CustomError()
+-kreiramo varijable const productImage = req.files.image
+-dodajemo uslov if (!productImage.mimetype.startsWith('image'))
+-u uslov if dodajemo objekt CustomError()
+-kreiramo varijablu const maxSize
+-dodajemo uslov if (productImage.size > maxSize)
+-kreiramo varijablu const path
+-kreiramo varijablu const imagePath
+-dodajemo metodu await productImage.mv(imagePath)
+-dodajemo metodu res.status()
+
+316. Review Model
+-u folderu models kreiramo Review.js fajl
+-kreiramo varijablu const ReviewSchema
+-dodajemo metodu ReviewSchema.index({ ... })
+
+317. Review Routes Structure
+-u folderu controllers kreiramo reviewController.js fajl
+-u reviewController.js fajlu kreiramo pet funkcija
+-kreiramo varijable const express i const router
+-importujemo funkciju authenticateUser
+-eksportujemo kreirane funkcije
+-u folderu routes kreiramo reviewRoutes.js fajl
+-importujemo funkcije iz reviewController.js fajla
+-kreiramo rute za '/' i '/:id'
+-eksportujemo varijablu router
+-u app.js fajlu kreiramo varijablu const reviewRouter
+-kreiramo metodu app.use('/api/v1/reviews', reviewRouter)
+
+318. Review Routes - Postman
+-kreiranje ruta u Postman-u
+
+319. Create Review Controller
+-u reviewController.js fajlu kreiramo varijable Review, Product, CustomError
+-importujemo objekt StatusCodes
+-importujemo funkciju checkPermissions
+-u funkciji createReview() kreiramo varijablu const { product: productId } 
+-dodajemo req.body.user
+-kreiramo varijablu const review
+-kreiramo varijablu const isValidProduct
+-dodajemo uslov if (!isValidProduct) 
+-u uslov if dodajemo objekt CustomError
+-kreiramo varijablu const alreadySubmitted 
+-dodajemo uslov if (alreadySubmitted)
+-u uslov if dodajemo objekt CustomError
+
+320. Get All Reviews and Get Single Review Controller
+-u reviewController.js fajlu, u funkciji getAllReviews() kreiramo varijablu const reviews
+-dodajemo res.status()
+-u funkciji getSingleReview() kreiramo varijablu const { id: reviewId }
+-kreiramo varijablu const review
+-dodajemo uslov if (!review) 
+-u uslov if dodajemo objekt CustomError
+-dodajemo metodu res.status()
+
+321. Delete Review Controller
+-u reviewController.js fajlu, u funkciji deleteReview() dodajemo kod iz funkcije getSingleReview()
+-dodajemo funkciju checkPermissions()
+-dodajemo metodu await review.deleteOne()
+
+322. Update Review Controller
+-u reviewController.js fajlu, u funkciju updateReview() dodajemo kod iz funkcije deleteReview()
+-kreiramo varijable const { rating, title, comment }
+-dodajemo metodu await review.save()
+
+323. Populate Method
+-u reviewController.js fajlu, metodi Review.find() dodajemo metodu populate()
+
+324. Mongoose Virtuals
+-u Product.js fajl dodajemo metodu ProductSchema.virtual()
+
+325. Alternative Single Product Reviews
+-u reviewController.js fajlu kreiramo asinhronu funkciju getSingleProductReviews()
+-kreiramo varijablu const { id: productId }
+-kreiramo varijablu const reviews
+-dodajemo metodu res.status()
+-eksportujemo funkciju getSingleProductReviews
+-u productRoutes.js fajl importujemo funkciju getSingleProductReviews
+-kreiramo rutu router.route('/:id/reviews')
+
+326. Remove All Reviews
+
+327. Aggregate Pipeline - Setup
+-u Review.js fajlu kreiramo metodu ReviewSchema.post()
+-dodajemo metodu ReviewSchema.statics.calculateAverageRating
+
+328. Reset Database
+
+329. Aggregate Pipeline - Atlas
+
+330. Aggregate Pipeline - Review Model
+
+331. Additional Group ID Example
+
+332. Order Schema
+-u folderu models kreiramo Order.js fajl
+
+333. Order Structure
+-u folderu controllers kreiramo orderController.js fajl
+-u orderController.js fajlu kreiramo i eksportujemo pet funkcija
+-u folderu routes kreiramo orderRoutes.js fajl
+-u orderRoutes.js fajl importujemo funkcije iz orderController.js fajla
+-u app.js fajlu kreiramo varijable const orderRouter
+-kreiramo metodu app.use('/api/v1/orders', orderRouter)
+
+334. Order - Postman Setup
+-kreiranje i testiranje ruta u Postman-u
+
+335. Create Order - Check Product
+-u orderController.js fajlu, u funkciji createOrder() kreiramo varijable const { items: cartItems, tax, shippingFee } 
+-dodajemo uslov if (!cartItems || cartItems.length < 1)
+-dodajemo uslov if (!tax || !shippingFee)
+-kreiramo dvije varijable let orderItems i let subtotal 
+-kreiramo petlju for (const item of cartItems) 
+-kreiramo varijable const { name, price, image, _id } = dbProduct
+-kreiramo varijablu const singleOrderItem
+
+336. Create Order - Complete
+-u orderController.js fajlu kreiramo asinhronu funkciju fakeStripeAPI()
+-kreiramo varijablu const order 
+
+337. All Order Routes
+-u orderController.js fajlu, u funkciji getAllOrders() kreiramo varijablu const orders
+-dodajemo metodu res.status(StatusCodes.OK)
+-u funkciji getSingleOrder kreiramo varijablu const { id: orderId }
+-kreiramo varijablu const order
+-dodajemo uslov if (!order)
+-dodajemo funkciju checkPermissions()
+-dodajemo metodu res.status(StatusCodes.OK)
+-u funkciji getCurrentUserOrders() kreiramo varijablu const orders
+-dodajemo metodu res.status(StatusCodes.OK)
+
+338. Docgen - Install
+
+339. Docgen - Create Docs
+
+340. Security Packages
+-u app.js fajlu kreiramo varijable rateLimiter, helmet, xss, cors, mongoSanitize
+-kreiramo metodu app.set('trust proxy', 1)
+-kreiramo metodu app.use(rateLimiter({ ...}))
+-kreiramo 4 metode app.use za pakete helmet, cors, xss, mongoSanitize
+
+341. Deploy on Heroku
+
+342. Small Fixes
+
+343. Deploy To Render
