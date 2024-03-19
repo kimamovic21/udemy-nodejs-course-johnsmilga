@@ -1,0 +1,156 @@
+Section 15: Auth Workflow
+
+344. Important Info
+
+345. Intro
+
+346. Setup
+
+347. Register Controller - Refactor
+-u authController.js fajlu, u funkciji register() kreiramo varijablu const verificationToken
+
+348. Login Controller - Refactor
+-u authController.js fajlu, u funkciji login() dodajemo uslov if (!user.isVerified)
+-u uslov if dodajemo objekt CustomError()
+
+349. Proper Verification Token
+-u authController.js fajlu kreiramo varijablu const crypto 
+-pravimo izmjene u varijabli const verificationToken
+
+350. Verify Email - Big Picture
+
+351. Verify Email Controller - Setup
+-u authController.js fajlu kreiramo asinhronu funkciju verifyEmail()
+-u funkciji verifyEmail() kreiramo varijable const { verificationToken, email }
+-dodajemo metodu res.status()
+-eksportujemo funkciju verifyEmail
+-u authRoutes.js fajl importujemo funkciju verifyEmail
+-kreiramo i testiramo rutu Verify Email u Postman-u
+
+352. Verify Email Controller - Complete
+-u authController.js fajlu, u funkciji verifyEmail() kreiramo varijablu const user
+-dodajemo uslov if (!user)
+-u uslov if (!user) dodajemo objekt CustomError()
+-dodajemo uslov if (user.verificationToken !== verificationToken)
+-inicijaliziramo varijable
+-dodajemo metodu await user.save()
+
+353. Send Email - Setup
+-u terminalu instaliramo Nodemailer paket
+-u folderu utils kreiramo 4 fajla: nodemailerConfig.js, sendEmail.js, sendResetPasswordEmail.js, sendVerificationEmail.js
+-u sendEmail.js fajlu kreiramo varijablu const nodemailer
+-kreiramo asinhronu funkciju sendEmail()
+-u funkciji sendEmail() kreiramo varijablu let testAccount
+-kreiramo varijablu const transporter
+-kreiramo varijablu let info
+-eksportujemo funkciju sendEmail
+-u authController.js fajlu kreiramo varijablu const sendEmail
+
+354. Send Email - First Part
+-u nodemailerConfig.js fajlu eksportujemo objekt
+-u sendEmail.js fajlu kreiramo varijablu const nodemailerConfig
+-u sendVerificationEmail.js fajlu kreiramo varijablu const sendEmail
+-kreiramo varijablu sendVerificationEmail()
+-u funkciji sendVerificationEmail() kreiramo varijablu const message
+-eksportujemo funkciju sendVerificationEmail
+-u index.js fajlu kreiramo varijablu const sendVerificationEmail
+
+355. Send Email - Second Part
+-u authController.js fajlu kreiramo varijablu const origin
+
+356. Front-End and Origin Gotchas
+-u authController.js fajlu kreiramo varijable const protocol i const host
+
+357. Refresh Token - Big Picture
+
+358. Token Model
+-u folderu models kreiramo Token.js fajl
+-u Token.js fajlu kreiramo varijablu const TokenSchema
+
+359. Create Token in Login Controller
+-u authController.js fajlu, u funkciji login() kreiramo varijablu let refreshToken
+-kreiramo varijable userAgent, ip, userToken
+-kreiramo varijablu const Token
+-dodajemo metodu await Token.create(userToken)
+-vrijednost metode Token.create() pohranjujemo u varijablu const token
+
+360. Send Multiple Cookies
+-u jwt.js fajlu kreiramo varijablu const accessTokenJWT
+-kreiramo varijablu const refreshTokenJWT
+-kreiramo dvije metode res.cookie()
+
+361. Check For Existing Token
+-u authController.js fajlu kreiramo varijablu const existingToken 
+-dodajemo uslov if (existingToken)
+-u uslovu if (existingToken) kreiramo varijablu const { isValid } = existingToken
+-dodajemo uslov if (!isValid)
+-u uslov if (!isValid) dodajemo objekt CustomError()
+-inicijaliziramo varijablu refreshToken
+
+362. Refactor Auth Middleware - AccessToken
+-u authentication.js fajlu, u funkciji authenticateUser kreiramo varijable const { refreshToken, accessToken } 
+-u blok koda try dodajemo uslov if (accessToken)
+-u uslovu if kreiramo varijablu const payload 
+-dodajemo metodu req.user
+-dodajemo return next()
+
+363. Refactor Auth Middleware - RefreshToken
+-kreiramo varijablu const existingToken
+-dodajemo uslov if (!existingToken || !existingToken?.isValid) 
+-u uslov if dodajemo objekt CustomError()
+-dodajemo metodu req.user
+-importujemo funkciju attachCookiesToResponse 
+
+364. Fix Logout Functionality
+-u authRoutes.js fajl importujemo funkciju authenticateUser
+-kreiramo metodu router.delete()
+-u authController.js fajlu, u funkciji logout() dodajemo metodu await Token.findOneAndDelete()
+-kreiramo dvije metode res.cookie()
+
+365. Forgot/Reset Password - Structure
+-u authController.js fajlu kreiramo dvije asinhrone funkcije forgot 3Password() i resetPassword()
+-u authRoutes.js fajl importujemo funkcije forgotPassword i resetPassword
+-kreiramo rute za funkcije forgotPassword i resetPassword
+-kreiramo i testiramo rute u Postman-u
+
+366. Forgot Password Controller
+-u authController.js fajlu, u funkciji forgotPassword() kreiramo varijablu const { email }
+-dodajemo uslov if (!email)
+-u uslov if dodajemo objekt CustomError
+-dodajemo metodu res.status(StatusCodes.OK)
+-kreiramo varijablu const user
+-dodajemo uslov if (user)
+-u uslovu if (user) kreiramo varijablu const passwordToken
+-kreiramo dvije varijablu const tenMinutes i const passwordTokenExpirationDate
+-inicijaliziramo varijable passwordToken i passwordTokenExpirationDate
+-dodajemo metodu await user.save()
+
+367. Send Reset Password Email
+-u utils/index.js fajl importujemo i eksportujemo funkciju sendResetPasswordEmail
+-u authController.js fajl importujemo funkciju sendResetPasswordEmail
+-u funkciju forgotPassword() dodajemo funkciju sendResetPasswordEmail()
+-u sendResetPasswordEmail.js fajlu kreiramo varijablu const sendEmail
+-kreiramo i eksportujemo funkciju sendResetPasswordEmail()
+-u funkciji sendResetPasswordEmail() kreiramo varijablu const resetURL
+-kreiramo varijablu const message
+-dodajemo funkciju sendEmail
+
+368. Reset Password Controller
+-u authController.js fajlu, u funkciji resetPassword() kreiramo varijable const { token, email, password }
+-dodajemo uslov if (!token || !email || !password)
+-u uslovu if dodajemo objekt CustomError()
+-kreiramo varijablu const user
+-dodajemo uslov if (user)
+-u uslovu if (user) kreiramo varijablu const currentDate 
+-u uslov if (user) dodajemo uslov if
+-u uslovu if inicijaliziramo varijable
+-dodajemo metodu await user.save()
+
+369. Hash Token
+-u folderu utils kreiramo createHash.js fajl
+-u createHash.js fajlu kreiramo varijablu const crypto
+-kreiramo funkciju hashString() sa parametrom string
+-u utils/index.js fajl importujemo i eksportujemo funkciju createHash
+-u authController.js fajl importujemo funkciju createHash
+-u funkciju forgotPassword() dodajemo user.passwordToken = createHash(passwordToken)
+-u funkciji resetPassword() dodajemo u uslov if(user.passwordToken === createHash(token))
